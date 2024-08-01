@@ -1,8 +1,8 @@
 insert into customers (email, pwd) values
-   ('account@gmail.com', '$2a$10$CFVmizYZkr5/66oCqoeULeur/9qGUBBSxOIlj/t8/Bq4SGJ9pod5.'),
-   ('cards@gmail.com', '$2a$10$CFVmizYZkr5/66oCqoeULeur/9qGUBBSxOIlj/t8/Bq4SGJ9pod5.'),
-   ('loans@gmail.com', '$2a$10$CFVmizYZkr5/66oCqoeULeur/9qGUBBSxOIlj/t8/Bq4SGJ9pod5.'),
-   ('balance@gmail.com', '$2a$10$CFVmizYZkr5/66oCqoeULeur/9qGUBBSxOIlj/t8/Bq4SGJ9pod5.');
+   ('account@gmail.com', '$2a$10$fbn6kkAm/Up5titTiozr2uN3MLL39otuKAUBHdaqzcmVVuSjTQHeK'),
+   ('cards@gmail.com', '$2a$10$fbn6kkAm/Up5titTiozr2uN3MLL39otuKAUBHdaqzcmVVuSjTQHeK'),
+   ('loans@gmail.com', '$2a$10$fbn6kkAm/Up5titTiozr2uN3MLL39otuKAUBHdaqzcmVVuSjTQHeK'),
+   ('balance@gmail.com', '$2a$10$fbn6kkAm/Up5titTiozr2uN3MLL39otuKAUBHdaqzcmVVuSjTQHeK');
 
 insert into roles(role_name, description, id_customer) values
    ('ROLE_ADMIN', 'cant view account endpoint', 1),
@@ -22,7 +22,7 @@ insert into partners(
 )
 values ('angelfgdeveloper',
         'angel ideas',
-        '$2a$10$9m4JHagydJWZb5zjc3Rd9O9yKuP5xSJsDNQmI8tz2EMbhYh7vKNkq',
+        '$2a$10$NSWrnJdEyTR7r/4oR.chg.QxpOl/dtS4qzVIY7K348qg2TvgIh.qu',
         'read,write',
         'authorization_code,refresh_token',
         'client_secret_basic,client_secret_jwt',
