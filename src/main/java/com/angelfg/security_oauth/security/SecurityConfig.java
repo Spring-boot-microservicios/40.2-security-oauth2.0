@@ -1,7 +1,10 @@
 package com.angelfg.security_oauth.security;
 
 import com.angelfg.security_oauth.services.CustomerUserDetailsService;
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -11,6 +14,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -170,5 +174,22 @@ public class SecurityConfig {
             .keyID(UUID.randomUUID().toString())
             .build();
     }
+
+    // JWK => Json Web Key
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        RSAKey rsa = generateKeys();
+        JWKSet jwkSet = new JWKSet(rsa);
+
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    // Decodifica el jwk generado por las lla publica y privada
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+
+
 
 }
