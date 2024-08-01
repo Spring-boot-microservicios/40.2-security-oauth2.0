@@ -39,6 +39,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+// Obtener el token de acceso => https://oauthdebugger.com/
+// Añadir Authorize URI => http://localhost:8080/oauth2/authorize
+// Redirect => https://oauthdebugger.com/debug
+// Client ID => angelfgdeveloper
+// Scope => write ó read
 @Configuration
 public class SecurityConfig {
 
