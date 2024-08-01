@@ -94,8 +94,10 @@ public class SecurityConfig {
     public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin(Customizer.withDefaults());
 
+        // No se puede usar tanto authorities como roles al mismo tiempo
+
         http.authorizeHttpRequests(auth -> auth
-//            Roles
+//            Roles (validamos solo roles)
             .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
             .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
 
@@ -148,12 +150,12 @@ public class SecurityConfig {
     }
 
     // Configuracion de JWT en roles
-    @Bean
-    public JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter() {
-        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
-        converter.setAuthorityPrefix("");
-        return converter;
-    }
+//    @Bean
+//    public JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter() {
+//        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+//        converter.setAuthorityPrefix("");
+//        return converter;
+//    }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
