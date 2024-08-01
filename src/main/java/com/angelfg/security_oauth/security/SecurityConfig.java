@@ -95,13 +95,13 @@ public class SecurityConfig {
         http.formLogin(Customizer.withDefaults());
 
         http.authorizeHttpRequests(auth -> auth
-            // Privilegios
-            .requestMatchers(ADMIN_RESOURCES).hasAuthority(AUTH_WRITE)
-            .requestMatchers(USER_RESOURCES).hasAuthority(AUTH_READ)
-
 //            Roles
-//            .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
-//            .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
+            .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
+            .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
+
+            // Privilegios
+//            .requestMatchers(ADMIN_RESOURCES).hasAuthority(AUTH_WRITE)
+//            .requestMatchers(USER_RESOURCES).hasAuthority(AUTH_READ)
             .anyRequest().permitAll()
         );
 
@@ -112,19 +112,19 @@ public class SecurityConfig {
     }
 
     // Configuracion para el usuario
-    @Bean
-    @Order(3)
-    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
-
-        // Roles
-        http.authorizeHttpRequests(auth -> auth
-            .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
-            .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
-            .anyRequest().permitAll()
-        );
-
-        return http.build();
-    }
+//    @Bean
+//    @Order(3)
+//    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
+//
+//        // Roles
+//        http.authorizeHttpRequests(auth -> auth
+//            .requestMatchers(ADMIN_RESOURCES).hasRole(ROLE_ADMIN)
+//            .requestMatchers(USER_RESOURCES).hasRole(ROLE_USER)
+//            .anyRequest().permitAll()
+//        );
+//
+//        return http.build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -156,10 +156,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter(JwtGrantedAuthoritiesConverter settings) {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(settings);
-        return converter;
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        // authorities
+        JwtGrantedAuthoritiesConverter authConverter = new JwtGrantedAuthoritiesConverter();
+        authConverter.setAuthoritiesClaimName("roles");
+        authConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter converterResponse = new JwtAuthenticationConverter();
+        converterResponse.setJwtGrantedAuthoritiesConverter(authConverter);
+
+        return converterResponse;
     }
 
     // Llaves RSA publica y privada
@@ -210,7 +216,7 @@ public class SecurityConfig {
         return context -> {
             Authentication authentication = context.getPrincipal();
 
-            Set<String> authorities =  authentication.getAuthorities()
+            Set<String> authorities = authentication.getAuthorities()
                     .stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toSet());
