@@ -1,6 +1,7 @@
 package com.angelfg.security_oauth.security;
 
 import com.angelfg.security_oauth.services.CustomerUserDetailsService;
+import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -17,6 +18,13 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.UUID;
 
 @Configuration
 public class SecurityConfig {
@@ -134,6 +142,33 @@ public class SecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(settings);
         return converter;
+    }
+
+    // Llaves RSA publica y privada
+    private static KeyPair generateRSA() {
+        KeyPair keyPair;
+
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA);
+            keyPairGenerator.initialize(RSA_SIZE);
+            keyPair = keyPairGenerator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return keyPair;
+    }
+
+    // Obtener la llave publica y privada
+    private static RSAKey generateKeys() {
+        KeyPair keyPair = generateRSA();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+        return new RSAKey.Builder(publicKey)
+            .privateKey(privateKey)
+            .keyID(UUID.randomUUID().toString())
+            .build();
     }
 
 }
